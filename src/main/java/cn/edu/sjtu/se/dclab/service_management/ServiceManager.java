@@ -43,7 +43,10 @@ public class ServiceManager {
 			throw new RuntimeException("the node existed!");
 		
 		client.createPersistent(path, true);
-		client.writeData(path, data);
+		String str = null;
+		if(data != null)
+			str = data.getStr();
+		client.writeData(path, str);
 		
 		registeListener(node, dataListener, nodeListener);
 	}
@@ -68,18 +71,18 @@ public class ServiceManager {
 	 * @param node 服务节点，可以是域名
 	 * @return 该节点及其子节点下的所有数据
 	 */
-	public List<Content> retrieve(String node){
-		List<Content> results = new ArrayList<Content>();
+	public List<String> retrieve(String node){
+		List<String> results = new ArrayList<String>();
 		
 		String path = getPath(node);
-		Content content = client.readData(path);
+		String content = client.readData(path);
 		if(content != null)
 			results.add(content);
 		
 		List<String> paths = client.getChildren(getPath(node));
 		
 		for(String p : paths){
-			Content cont = client.readData(path + "/" + p, true);
+			String cont = client.readData(path + "/" + p, true);
 			if(cont != null)
 				results.add(cont);
 		}
@@ -93,8 +96,11 @@ public class ServiceManager {
 	 * @param data 更新数据
 	 */
 	public void update(String node, Content data){
+		String str = null;
+		if(data != null)
+			str = data.getStr();
 		String path = getPath(node);
-		client.writeData(path, data);
+		client.writeData(path, str);
 	}
 	
 	/**
@@ -115,14 +121,15 @@ public class ServiceManager {
 			path = "/" + node;
 		return path;
 	}
-/*	
+	
+	
 	public static void main(String[] args) throws InterruptedException {
 		ServiceManager manager = ServiceManager.getInstance();
 		
 		class MyContent extends Content{
-			*//**
+			/**
 			 * 
-			 *//*
+			 */
 			private static final long serialVersionUID = -4740801574433386564L;
 			String ip;
 			String port;
@@ -132,6 +139,10 @@ public class ServiceManager {
 			}
 			@Override
 			public String toString(){
+				return ip + ":" + port;
+			}
+			@Override
+			public String getStr() {
 				return ip + ":" + port;
 			}
 		}
@@ -167,5 +178,5 @@ public class ServiceManager {
 		manager.remove(node);
 		Thread.sleep(5000);
 	}
-*/	
+	
 }

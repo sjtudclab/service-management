@@ -13,4 +13,5 @@ public abstract class Content implements Serializable{
 	 */
 	private static final long serialVersionUID = 7568290049392455890L;
 
+	public abstract String getStr();
 }
