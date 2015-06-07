@@ -30,10 +30,12 @@ public class ServiceManager {
 	}
 	
 	/**
-	 * *向client注册服务
+	 * 
+	 * 向client注册服务
 	 * @param node 注册节点，可以是域名
 	 * @param data 注册内容
-	 * @param dataListener 监听器，监听数据变化
+	 * @param dataListener 数据监听器
+	 * @param nodeListener 节点监听器
 	 */
 	public void registe(String node, Content data, DataListener dataListener, NodeListener nodeListener){
 		String path = getPath(node);
@@ -42,6 +44,20 @@ public class ServiceManager {
 		
 		client.createPersistent(path, true);
 		client.writeData(path, data);
+		
+		registeListener(node, dataListener, nodeListener);
+	}
+	
+	/**
+	 * 注册监听器
+	 * @param node 节点
+	 * @param dataListener 数据监听器
+	 * @param nodeListener 节点监听器
+	 */
+	public void registeListener(String node, DataListener dataListener, NodeListener nodeListener){
+		String path = getPath(node);
+		if(client.exists(path))
+			throw new RuntimeException("the node existed!");
 		
 		if(dataListener != null)
 			client.subscribeDataChanges(path, dataListener);
