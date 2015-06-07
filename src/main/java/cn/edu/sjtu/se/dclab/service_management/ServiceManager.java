@@ -56,8 +56,6 @@ public class ServiceManager {
 	 */
 	public void registeListener(String node, DataListener dataListener, NodeListener nodeListener){
 		String path = getPath(node);
-		if(client.exists(path))
-			throw new RuntimeException("the node existed!");
 		
 		if(dataListener != null)
 			client.subscribeDataChanges(path, dataListener);
